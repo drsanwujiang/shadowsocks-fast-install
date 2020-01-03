@@ -1,0 +1,1 @@
+# shadowsocks-fast-install
