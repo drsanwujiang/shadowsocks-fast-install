@@ -167,7 +167,7 @@ function start_shadowsocks() {
 function info_display() {
     echo "===== Well Done ====="
 
-    echo -e "\nYour shadowsocks infomation:\n"
+    echo -e "\nPorts and passwords:"
     echo " Port  * Password"
     echo "*************************"
 
