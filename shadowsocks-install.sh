@@ -42,7 +42,7 @@ function configure_shadowsocks() {
 
     sudo mkdir -p /etc/shadowsocks >> /dev/null
 
-    echo -e '{\n\t"server": "::",\n\t"local_address": "127.0.0.1",\n\t"local_port": 1080,\n\t"port_password":\n\t{' > /etc/shadowsocks/config.json
+    echo -e -n '{\n\t"server": "::",\n\t"local_address": "127.0.0.1",\n\t"local_port": 1080,\n\t"port_password":\n\t{' > /etc/shadowsocks/config.json
 
     while true
     do
@@ -52,6 +52,7 @@ function configure_shadowsocks() {
             if [ $port_index -eq 0 ]; then
                 echo "Error: please input at least 1 port number!"
             else
+                let port_index--
                 break
             fi
         elif [ $port -ge 1 ] && [ $port -le 65535 ]; then
@@ -67,16 +68,16 @@ function configure_shadowsocks() {
         fi
     done
 
-    for ((i=0; i<port_index; i++))
+    for ((i=0; i<=port_index; i++))
     do
         echo -e -n "\n\t\t\"${port_numbers[$i]}\": \"${port_passwords[$i]}\"" >> /etc/shadowsocks/config.json
 
-        if [ $i != $port_index ]; then
-            echo "," >> /etc/shadowsocks/config.json
+        if [ $i -ne $port_index ]; then
+            echo -n "," >> /etc/shadowsocks/config.json
         fi
     done
 
-    echo -e '\t},\n\t"timeout": 300,\n\t"method": "aes-256-gcm",\n\t"fast_open": true' >> /etc/shadowsocks/config.json
+    echo -e '\n\t},\n\t"timeout": 300,\n\t"method": "aes-256-gcm",\n\t"fast_open": true' >> /etc/shadowsocks/config.json
     echo "}" >> /etc/shadowsocks/config.json
 
     echo "Done"
@@ -171,7 +172,7 @@ function info_display() {
     echo " Port  * Password"
     echo "*************************"
 
-    for ((i=0; i<port_index; i++))
+    for ((i=0; i<=port_index; i++))
     do
         printf " %-6d* %s\n" ${port_numbers[$i]} ${port_passwords[$i]}
     done
